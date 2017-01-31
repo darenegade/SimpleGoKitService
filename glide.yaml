@@ -1,0 +1,10 @@
+package: SimpleGoKitService
+import:
+- package: github.com/go-kit/kit
+  subpackages:
+  - endpoint
+  - log
+  - transport/http
+- package: golang.org/x/net
+  subpackages:
+  - context

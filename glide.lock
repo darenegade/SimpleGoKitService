@@ -1,0 +1,21 @@
+hash: 02d1192d54b9dd7d07387d5cb22ea9a7bfa2ad541562c413289941f7925d4cdf
+updated: 2017-01-31T18:09:17.414562955+01:00
+imports:
+- name: github.com/go-kit/kit
+  version: bbb2306ec1318f1da5e9cba56bf933d0c7641e84
+  subpackages:
+  - endpoint
+  - log
+  - transport/http
+- name: github.com/go-logfmt/logfmt
+  version: 390ab7935ee28ec6b286364bba9b4dd6410cb3d5
+- name: github.com/go-stack/stack
+  version: 100eb0c0a9c5b306ca2fb4f165df21d80ada4b82
+- name: github.com/kr/logfmt
+  version: b84e30acd515aadc4b783ad4ff83aff3299bdfe0
+- name: golang.org/x/net
+  version: f2499483f923065a842d38eb4c7f1927e6fc6e6d
+  subpackages:
+  - context
+  - context/ctxhttp
+testImports: []
