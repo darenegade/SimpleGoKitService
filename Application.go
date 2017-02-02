@@ -5,8 +5,10 @@ import (
 	"net/http"
 	"os"
 
+	stdjwt "github.com/dgrijalva/jwt-go"
 	httptransport "github.com/go-kit/kit/transport/http"
 	LOG "github.com/go-kit/kit/log"
+	"github.com/go-kit/kit/auth/jwt"
 	"golang.org/x/net/context"
 
 	"github.com/go-kit/kit/endpoint"
@@ -22,14 +24,16 @@ func main() {
 
 	var helloWorldEndpoint endpoint.Endpoint
 	helloWorldEndpoint = makeHelloWorldEndpoint(svc)
-	//kf := func(token *stdjwt.Token) (interface{}, error) { return []byte("TEST"), nil }
-	//helloWorldEndpoint = jwt.NewParser(kf, stdjwt.SigningMethodHS256)(helloWorldEndpoint)
+	kf := func(token *stdjwt.Token) (interface{}, error) { return []byte("TEST"), nil }
+	helloWorldEndpoint = jwt.NewParser(kf, stdjwt.SigningMethodHS256)(helloWorldEndpoint)
 
 	helloWorldHandler := httptransport.NewServer(
 		ctx,
 		helloWorldEndpoint,
 		decodeHelloWorldRequest,
 		encodeResponse,
+		httptransport.ServerBefore(jwt.ToHTTPContext()),
+		httptransport.ServerErrorLogger(logger),
 	)
 
 	http.Handle("/hello_service", helloWorldHandler)
