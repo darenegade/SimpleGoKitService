@@ -33,7 +33,7 @@ func encodeResponse(_ context.Context, w http.ResponseWriter, response interface
 
 
 type helloWorldRequest struct {
-	Name string `json:"Name"`
+	Name string `json:"name"`
 }
 
 type helloWorldResponse struct {

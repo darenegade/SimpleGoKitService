@@ -13,13 +13,15 @@ type loggingMiddleware struct {
 
 func (mw loggingMiddleware) helloService(name string) (output string, err error) {
 	defer func(begin time.Time) {
-		mw.logger.Log(
-			"method", "Hello_World",
-			"input", name,
-			"output", output,
-			"err", err,
-			"took", time.Since(begin),
-		)
+		if err != nil {
+			mw.logger.Log(
+				"method", "Hello_World",
+				"input", name,
+				"output", output,
+				"err", err,
+				"took", time.Since(begin),
+			)
+		}
 	}(time.Now())
 
 	output, err = mw.next.helloService(name)
