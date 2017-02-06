@@ -15,6 +15,12 @@ import (
 )
 
 func main() {
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		log.Fatal("$PORT not set")
+	}
+
 	logger := LOG.NewLogfmtLogger(os.Stdout)
 	ctx := context.Background()
 
@@ -37,5 +43,5 @@ func main() {
 	)
 
 	http.Handle("/hello_service", helloWorldHandler)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
