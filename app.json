@@ -1,0 +1,14 @@
+{
+  "name": "Go Kit Simple Service",
+  "description": "simple service using go-kit",
+  "keywords": [
+    "go-kit",
+    "go"
+  ],
+  "image": "heroku/go:1.7",
+  "mount_dir": "src/github.com/darenegade/SimpleGoKitService",
+  "website": "http://github.com/darenegade/SimpleGoKitService",
+  "repository": "http://github.com/darenegade/SimpleGoKitService",
+  "env": {
+  }
+}
