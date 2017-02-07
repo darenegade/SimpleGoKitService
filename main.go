@@ -12,9 +12,13 @@ import (
 	"golang.org/x/net/context"
 
 	"github.com/go-kit/kit/endpoint"
+
+	"github.com/darenegade/SimpleGoKitService/database"
 )
 
 func main() {
+
+	database.Initialize()
 
 	port := os.Getenv("PORT")
 	if port == "" {
