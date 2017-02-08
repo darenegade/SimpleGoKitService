@@ -5,16 +5,20 @@ import "errors"
 var ErrEmpty = errors.New("Empty string")
 
 type HelloWorldService interface {
-	helloService(string) (string, error)
+	helloService(helloWorld) (string, error)
 }
 
 type helloWorldService struct{}
 
-func (helloWorldService) helloService(name string) (string, error) {
-	if name == "" {
+type helloWorld struct {
+	Name string `json:"name"`
+}
+
+func (helloWorldService) helloService(name helloWorld) (string, error) {
+	if name.Name == "" {
 		return "", ErrEmpty
 	}
-	return "Hello " + name, nil
+	return "Hello " + name.Name, nil
 }
 
 

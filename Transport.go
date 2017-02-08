@@ -7,6 +7,7 @@ import (
 
 	"golang.org/x/net/context"
 	"errors"
+	http2 "github.com/go-kit/kit/transport/http"
 )
 
 type ErrorWithStatus struct {
@@ -20,26 +21,44 @@ var ErrWrongMethod = ErrorWithStatus{ errors.New("Request has wrong method") , 4
 
 func makeHelloWorldEndpoint(svc HelloWorldService) (string, endpoint.Endpoint) {
 	return "/hello_service", func(ctx context.Context, request interface{}) (interface{}, error) {
-		req := request.(helloWorldRequest)
-		v, err := svc.helloService(req.Name)
-		if err != nil {
-			return helloWorldResponse{v, err.Error()}, nil
+		req := request.(Request)
+
+		if req.Method == http.MethodPost {
+			return svc.helloService(*(req.data.(*helloWorld)))
+		} else {
+			return nil, ErrWrongMethod
 		}
-		return helloWorldResponse{v,""}, nil
 	}
 }
 
-func decodeHelloWorldRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	var request helloWorldRequest
+func makeHelloWorldDecoder() http2.DecodeRequestFunc {
+	return makeDecoder(func() interface{} {
+		return new(helloWorld)
+	})
 
-	if r.Method != http.MethodPost {
-		return nil, ErrWrongMethod
-	}
 
-	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		return nil, err
+
+}
+
+func makeDecoder(data createNewDatatype) http2.DecodeRequestFunc {
+	return func(ctx context.Context, r *http.Request) (interface{}, error) {
+
+		body := data()
+
+		if err := json.NewDecoder(r.Body).Decode(body); err != nil {
+			return nil, err
+		}
+
+		request := Request{r,body}
+		return request, nil
 	}
-	return request, nil
+}
+
+type createNewDatatype func() interface{}
+
+type Request struct {
+	*http.Request
+	data interface{}
 }
 
 func encodeResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
@@ -47,12 +66,5 @@ func encodeResponse(_ context.Context, w http.ResponseWriter, response interface
 }
 
 
-type helloWorldRequest struct {
-	Name string `json:"name"`
-}
 
-type helloWorldResponse struct {
-	ResponseText   string `json:"response"`
-	Err string `json:"err,omitempty"`
-}
 

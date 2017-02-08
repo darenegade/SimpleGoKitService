@@ -46,7 +46,7 @@ func handleHelloWorld() {
 	helloWorldHandler := httptransport.NewServer(
 		ctx,
 		helloWorldEndpoint,
-		decodeHelloWorldRequest,
+		makeHelloWorldDecoder(),
 		encodeResponse,
 		httptransport.ServerBefore(jwt.ToHTTPContext()),
 		httptransport.ServerErrorLogger(logger),
