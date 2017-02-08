@@ -13,7 +13,7 @@ var (
 func Initialize() {
 	
 	var err error
-	database, err = gorm.Open("mysql", "root:@localhost:3306/tasksgo?charset=utf8&parseTime=True&loc=Local")
+	database, err = gorm.Open("mysql", "root@/tasksgo?charset=utf8&parseTime=True&loc=Local")
 	if err != nil {
 		panic("failed to connect database")
 	}

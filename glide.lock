@@ -1,5 +1,5 @@
 hash: 02d1192d54b9dd7d07387d5cb22ea9a7bfa2ad541562c413289941f7925d4cdf
-updated: 2017-02-07T17:22:44.08638213+01:00
+updated: 2017-02-08T18:37:05.928418118+01:00
 imports:
 - name: github.com/dgrijalva/jwt-go
   version: 2268707a8f0843315e2004ee4f1d021dc08baedf
@@ -27,6 +27,8 @@ imports:
   version: 1c35d901db3da928c72a72d8458480cc9ade058f
 - name: github.com/kr/logfmt
   version: b84e30acd515aadc4b783ad4ff83aff3299bdfe0
+- name: github.com/pkg/errors
+  version: 248dadf4e9068a0b3e79f02ed0a610d935de5302
 - name: golang.org/x/net
   version: f2499483f923065a842d38eb4c7f1927e6fc6e6d
   subpackages:

@@ -27,16 +27,22 @@ func main() {
 
 	logger := LOG.NewLogfmtLogger(os.Stdout)
 	ctx := context.Background()
-
-	var svc HelloWorldService
-	svc = helloWorldService{}
-	svc = loggingMiddleware{logger, svc}
-
-	var helloWorldEndpoint endpoint.Endpoint
-	helloWorldEndpoint = makeHelloWorldEndpoint(svc)
 	kf := func(token *stdjwt.Token) (interface{}, error) { return []byte("TEST"), nil }
-	helloWorldEndpoint = jwt.NewParser(kf, stdjwt.SigningMethodHS256)(helloWorldEndpoint)
 
+	handleHelloWorld(logger, kf, ctx)
+
+
+	log.Fatal(http.ListenAndServe(":"+port, nil))
+}
+
+func handleHelloWorld(logger LOG.Logger, kf func(token *stdjwt.Token) (interface{}, error), ctx context.Context) {
+	var svc HelloWorldService
+	var helloWorldEndpoint endpoint.Endpoint
+
+	svc = helloWorldService{}
+	helloWorldEndpoint = makeHelloWorldEndpoint(svc)
+	helloWorldEndpoint = jwt.NewParser(kf, stdjwt.SigningMethodHS256)(helloWorldEndpoint)
+	helloWorldEndpoint = Logging(LOG.NewContext(logger).With("method", "hello_service"))(helloWorldEndpoint)
 	helloWorldHandler := httptransport.NewServer(
 		ctx,
 		helloWorldEndpoint,
@@ -45,7 +51,5 @@ func main() {
 		httptransport.ServerBefore(jwt.ToHTTPContext()),
 		httptransport.ServerErrorLogger(logger),
 	)
-
 	http.Handle("/hello_service", helloWorldHandler)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
