@@ -2,7 +2,7 @@ package main
 
 import "errors"
 
-var ErrEmpty = errors.New("Empty string")
+
 
 type HelloWorldService interface {
 	helloService(helloWorld) (string, error)

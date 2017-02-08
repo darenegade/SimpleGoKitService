@@ -6,18 +6,8 @@ import (
 	"net/http"
 
 	"golang.org/x/net/context"
-	"errors"
 	http2 "github.com/go-kit/kit/transport/http"
 )
-
-type ErrorWithStatus struct {
-	error
-	code int
-}
-
-func (error ErrorWithStatus) StatusCode() int { return error.code}
-
-var ErrWrongMethod = ErrorWithStatus{ errors.New("Request has wrong method") , 405}
 
 func makeHelloWorldEndpoint(svc HelloWorldService) (string, endpoint.Endpoint) {
 	return "/hello_service", func(ctx context.Context, request interface{}) (interface{}, error) {
