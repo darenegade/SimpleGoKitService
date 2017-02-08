@@ -2,6 +2,8 @@ package main
 
 import "errors"
 
+var ErrEmpty = errors.New("Empty string")
+
 type HelloWorldService interface {
 	helloService(string) (string, error)
 }
@@ -15,4 +17,4 @@ func (helloWorldService) helloService(name string) (string, error) {
 	return "Hello " + name, nil
 }
 
-var ErrEmpty = errors.New("Empty string")
+

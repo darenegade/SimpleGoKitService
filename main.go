@@ -16,6 +16,12 @@ import (
 	"github.com/darenegade/SimpleGoKitService/database"
 )
 
+var (
+	logger = LOG.NewLogfmtLogger(os.Stdout)
+	ctx = context.Background()
+	kf = func(token *stdjwt.Token) (interface{}, error) { return []byte("TEST"), nil }
+)
+
 func main() {
 
 	database.Initialize()
@@ -25,24 +31,18 @@ func main() {
 		log.Fatal("$PORT not set")
 	}
 
-	logger := LOG.NewLogfmtLogger(os.Stdout)
-	ctx := context.Background()
-	kf := func(token *stdjwt.Token) (interface{}, error) { return []byte("TEST"), nil }
-
-	handleHelloWorld(logger, kf, ctx)
+	handleHelloWorld()
 
 
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
 
-func handleHelloWorld(logger LOG.Logger, kf func(token *stdjwt.Token) (interface{}, error), ctx context.Context) {
-	var svc HelloWorldService
-	var helloWorldEndpoint endpoint.Endpoint
+func handleHelloWorld() {
 
-	svc = helloWorldService{}
-	helloWorldEndpoint = makeHelloWorldEndpoint(svc)
-	helloWorldEndpoint = jwt.NewParser(kf, stdjwt.SigningMethodHS256)(helloWorldEndpoint)
-	helloWorldEndpoint = Logging(LOG.NewContext(logger).With("method", "hello_service"))(helloWorldEndpoint)
+	svc := helloWorldService{}
+	endpointPath, helloWorldEndpoint := makeHelloWorldEndpoint(svc)
+	helloWorldEndpoint = configEndpoint(helloWorldEndpoint, endpointPath)
+
 	helloWorldHandler := httptransport.NewServer(
 		ctx,
 		helloWorldEndpoint,
@@ -51,5 +51,11 @@ func handleHelloWorld(logger LOG.Logger, kf func(token *stdjwt.Token) (interface
 		httptransport.ServerBefore(jwt.ToHTTPContext()),
 		httptransport.ServerErrorLogger(logger),
 	)
-	http.Handle("/hello_service", helloWorldHandler)
+	http.Handle(endpointPath, helloWorldHandler)
+}
+
+func configEndpoint (endpoint endpoint.Endpoint, endpointName string) endpoint.Endpoint {
+	endpoint = jwt.NewParser(kf, stdjwt.SigningMethodHS256)(endpoint)
+	endpoint = Logging(LOG.NewContext(logger).With("method", endpointName))(endpoint)
+	return endpoint
 }

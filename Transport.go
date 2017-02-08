@@ -6,10 +6,20 @@ import (
 	"net/http"
 
 	"golang.org/x/net/context"
+	"errors"
 )
 
-func makeHelloWorldEndpoint(svc HelloWorldService) endpoint.Endpoint {
-	return func(ctx context.Context, request interface{}) (interface{}, error) {
+type ErrorWithStatus struct {
+	error
+	code int
+}
+
+func (error ErrorWithStatus) StatusCode() int { return error.code}
+
+var ErrWrongMethod = ErrorWithStatus{ errors.New("Request has wrong method") , 405}
+
+func makeHelloWorldEndpoint(svc HelloWorldService) (string, endpoint.Endpoint) {
+	return "/hello_service", func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(helloWorldRequest)
 		v, err := svc.helloService(req.Name)
 		if err != nil {
@@ -21,6 +31,11 @@ func makeHelloWorldEndpoint(svc HelloWorldService) endpoint.Endpoint {
 
 func decodeHelloWorldRequest(_ context.Context, r *http.Request) (interface{}, error) {
 	var request helloWorldRequest
+
+	if r.Method != http.MethodPost {
+		return nil, ErrWrongMethod
+	}
+
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		return nil, err
 	}
