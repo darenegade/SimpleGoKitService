@@ -14,6 +14,9 @@ import (
 	"github.com/go-kit/kit/endpoint"
 
 	"github.com/darenegade/SimpleGoKitService/database"
+	"github.com/darenegade/SimpleGoKitService/hello"
+	"github.com/darenegade/SimpleGoKitService/util"
+	"github.com/darenegade/SimpleGoKitService/middleware"
 )
 
 var (
@@ -39,15 +42,15 @@ func main() {
 
 func handleHelloWorld() {
 
-	svc := helloWorldService{}
-	endpointPath, helloWorldEndpoint := makeHelloWorldEndpoint(svc)
+	svc := hello.HelloWorldService{}
+	endpointPath, helloWorldEndpoint := hello.MakeHelloWorldEndpoint(svc)
 	helloWorldEndpoint = configEndpoint(helloWorldEndpoint, endpointPath)
 
 	helloWorldHandler := httptransport.NewServer(
 		ctx,
 		helloWorldEndpoint,
-		makeHelloWorldDecoder(),
-		encodeResponse,
+		hello.MakeHelloWorldDecoder(),
+		util.EncodeResponse,
 		httptransport.ServerBefore(jwt.ToHTTPContext()),
 		httptransport.ServerErrorLogger(logger),
 	)
@@ -56,6 +59,6 @@ func handleHelloWorld() {
 
 func configEndpoint (endpoint endpoint.Endpoint, endpointName string) endpoint.Endpoint {
 	endpoint = jwt.NewParser(kf, stdjwt.SigningMethodHS256)(endpoint)
-	endpoint = Logging(LOG.NewContext(logger).With("method", endpointName))(endpoint)
+	endpoint = middleware.Logging(LOG.NewContext(logger).With("method", endpointName))(endpoint)
 	return endpoint
 }
