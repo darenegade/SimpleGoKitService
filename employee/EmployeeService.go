@@ -2,6 +2,7 @@ package employee
 
 import (
 	"github.com/darenegade/SimpleGoKitService/database"
+	"github.com/darenegade/SimpleGoKitService/util"
 )
 
 
@@ -25,8 +26,7 @@ func (EmployeeService) findAll() ([]database.Employee,error) {
 
 func (EmployeeService) findOne(ID uint) (database.Employee, error){
 	var employee database.Employee
-	employee.ID = ID
-	err := database.FindOne(&employee)
+	err := database.FindOne(&employee, ID)
 
 	return employee, err
 }
@@ -37,16 +37,17 @@ func (EmployeeService) create(employee database.Employee) (database.Employee, er
 	return employee, err
 }
 
-func (EmployeeService) update(employee database.Employee, ID uint) (database.Employee, error){
+func (es EmployeeService) update(employee database.Employee, ID uint) (database.Employee, error){
 
-	var current database.Employee
-	current.ID = ID
+	current, err := es.findOne(ID)
 
-	database.FindOne(&current)
+	if err != nil {
+		return employee, err
+	}
 
 	current.Name = employee.Name
 
-	err := database.Update(&current)
+	err = database.Update(&current)
 
 	return current, err
 }

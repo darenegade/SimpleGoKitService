@@ -51,15 +51,16 @@ func Update(entity interface{}) error {
 	return errors.New("Entity doesn't exists.")
 }
 
-func FindOne(entity interface{}) error {
+func FindOne(entity interface{}, ID uint) error {
+
+	database.Find(entity, ID)
 
 	if !database.NewRecord(entity) {
-
-		database.Find(entity)
 		return nil
+	} else {
+		return errors.New("Entity doesn't exists.")
 	}
 
-	return errors.New("Entity doesn't exists.")
 }
 
 func FindAll(entities interface{}) error {
