@@ -1,10 +1,8 @@
 package database
 
-import "github.com/jinzhu/gorm"
-
-type Employee struct{
-	gorm.Model
-	Name string
+type Employee struct {
+	BaseEntity
+	Name         string
 	DepartmentID uint
-	TaskID uint
+	TaskID       uint
 }

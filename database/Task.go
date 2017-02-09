@@ -1,9 +1,7 @@
 package database
 
-import "github.com/jinzhu/gorm"
-
-type Task struct{
-	gorm.Model
+type Task struct {
+	BaseEntity
 	Description string
 	Responsible []Employee
 }
