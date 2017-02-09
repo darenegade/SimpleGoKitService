@@ -9,12 +9,16 @@ import (
 	"github.com/darenegade/SimpleGoKitService/util"
 )
 
-func MakeHelloWorldEndpoint(svc HelloWorldService) (string, endpoint.Endpoint) {
-	return "/hello_service", func(ctx context.Context, request interface{}) (interface{}, error) {
+var svc = HelloWorldService{}
+var PATH = "/hello_service"
+
+func MakeHelloWorldEndpoint() (string, endpoint.Endpoint) {
+
+	return PATH, func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(util.Request)
 
 		if req.Method == http.MethodPost {
-			return svc.HelloService(*(req.Data.(*HelloWorld)))
+			return svc.helloService(*(req.Data.(*HelloWorld)))
 		} else {
 			return nil, util.ErrWrongMethod
 		}
@@ -25,7 +29,4 @@ func MakeHelloWorldDecoder() http2.DecodeRequestFunc {
 	return util.MakeDecoder(func() interface{} {
 		return new(HelloWorld)
 	})
-
-
-
 }

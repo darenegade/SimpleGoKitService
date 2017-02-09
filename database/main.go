@@ -11,67 +11,65 @@ var (
 )
 
 func Initialize() {
-	
+
 	var err error
 	database, err = gorm.Open("mysql", "root@/tasksgo?charset=utf8&parseTime=True&loc=Local")
 	if err != nil {
 		panic("failed to connect database")
 	}
 
-	database.AutoMigrate(&Employee{}, &Task{}, &Department{})
+	database.CreateTable(&Employee{}, &Task{}, &Department{})
 }
 
 type Repository interface {
-	create(entity interface{}) error
-	update(entity interface{}) error
-	delete(ID uint) error
-	findOne(entity interface{}, ID uint) error
-	findAll(entities []interface{}) error
+	Create(entity interface{}) error
+	Update(entity interface{}) error
+	Delete(ID uint) error
+	FindOne(entity interface{}) error
+	FindAll(entities interface{}) error
 }
 
-type SQLRepository struct{}
-
-func (SQLRepository) create(entity interface{}) error {
+func Create(entity interface{}) error {
 
 	if database.NewRecord(entity) {
 
-		database.Create(&entity)
+		database.Create(entity)
 		return nil
 	}
 
 	return errors.New("Entity already exists.")
 }
 
-func (SQLRepository) update(entity interface{}) error {
+func Update(entity interface{}) error {
 
 	if !database.NewRecord(entity) {
 
-		database.Update(&entity)
+		database.Save(entity)
 		return nil
 	}
 
 	return errors.New("Entity doesn't exists.")
 }
 
-func (SQLRepository) findOne(entity interface{}, ID uint) error {
+func FindOne(entity interface{}) error {
 
 	if !database.NewRecord(entity) {
 
-		database.Find(&entity, ID)
+		database.Find(entity)
 		return nil
 	}
 
 	return errors.New("Entity doesn't exists.")
 }
 
-func (SQLRepository) findAll(entities []interface{}, ID uint) error {
+func FindAll(entities interface{}) error {
 
-	database.Find(&entities)
+	database.Find(entities)
 	return nil
 }
 
-func (SQLRepository) delete(entity interface{}) error {
+func Delete(entity interface{}) error {
 
-	database.Delete(&entity)
+	database.Delete(entity)
 	return nil
 }

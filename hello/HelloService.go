@@ -6,7 +6,7 @@ import (
 
 
 
-type HelloWorldInterface interface {
+type HelloWorldRepository interface {
 	helloService(HelloWorld) (string, error)
 }
 
@@ -16,7 +16,7 @@ type HelloWorld struct {
 	Name string `json:"name"`
 }
 
-func (HelloWorldService) HelloService(name HelloWorld) (string, error) {
+func (HelloWorldService) helloService(name HelloWorld) (string, error) {
 	if name.Name == "" {
 		return "", util.ErrEmpty
 	}
