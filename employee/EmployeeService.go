@@ -2,7 +2,6 @@ package employee
 
 import (
 	"github.com/darenegade/SimpleGoKitService/database"
-	"github.com/darenegade/SimpleGoKitService/util"
 )
 
 
