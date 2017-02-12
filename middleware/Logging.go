@@ -10,7 +10,7 @@ import (
 
 func Logging (logger log.Logger) endpoint.Middleware {
 	return func(next endpoint.Endpoint) endpoint.Endpoint {
-		return func(ctx context.Context, request interface{}) (interface{}, error) {
+		return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 
 			data,err := next(ctx, request)
 
