@@ -4,6 +4,7 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/pkg/errors"
+	"os"
 )
 
 var (
@@ -14,8 +15,14 @@ func Initialize() {
 
 	var err error
 
-	database, err = gorm.Open("mysql", "root:secret@tcp(mysql:3306)/tasksgo?charset=utf8&parseTime=True&loc=Local")
-	//database, err = gorm.Open("mysql", "root:secret@/tasksgo?charset=utf8&parseTime=True&loc=Local")
+	local := os.Getenv("local")
+
+	if local == "true" {
+		database, err = gorm.Open("mysql", "root:secret@/tasksgo?charset=utf8&parseTime=True&loc=Local")
+	} else {
+
+		database, err = gorm.Open("mysql", "root:secret@tcp(mysql:3306)/tasksgo?charset=utf8&parseTime=True&loc=Local")
+	}
 
 	if err != nil {
 		panic("failed to connect database")
