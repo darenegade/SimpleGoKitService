@@ -33,7 +33,7 @@ func main() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		log.Fatal("$PORT not set")
+		port = "8081"
 	}
 
 	r := mux.NewRouter()

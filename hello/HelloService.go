@@ -13,7 +13,7 @@ type HelloWorldRepository interface {
 type HelloWorldService struct{}
 
 type HelloWorld struct {
-	Name string `json:"name"`
+	Name string `json:"Name"`
 }
 
 func (HelloWorldService) helloService(name HelloWorld) (string, error) {
