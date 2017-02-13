@@ -4,8 +4,6 @@ import (
 	"github.com/darenegade/SimpleGoKitService/util"
 )
 
-
-
 type HelloWorldRepository interface {
 	helloService(HelloWorld) (string, error)
 }
@@ -22,5 +20,3 @@ func (HelloWorldService) helloService(name HelloWorld) (string, error) {
 	}
 	return "Hello " + name.Name, nil
 }
-
-

@@ -5,14 +5,14 @@ import (
 	"net/http"
 	"strconv"
 
-	"golang.org/x/net/context"
-	http2 "github.com/go-kit/kit/transport/http"
 	"encoding/xml"
+	http2 "github.com/go-kit/kit/transport/http"
 	"github.com/gorilla/mux"
+	"golang.org/x/net/context"
 )
 
 var ID = "id"
-var IDPATH = "/{"+ID+"}"
+var IDPATH = "/{" + ID + "}"
 
 func MakeDecoder(data CreateNewDatatype) http2.DecodeRequestFunc {
 	return func(ctx context.Context, r *http.Request) (interface{}, error) {
@@ -44,7 +44,7 @@ func MakeDecoder(data CreateNewDatatype) http2.DecodeRequestFunc {
 	}
 }
 
-func MakePathIDDecoder(data CreateNewDatatype)  http2.DecodeRequestFunc {
+func MakePathIDDecoder(data CreateNewDatatype) http2.DecodeRequestFunc {
 	return func(ctx context.Context, r *http.Request) (interface{}, error) {
 		vars := mux.Vars(r)
 		idstring, ok := vars[ID]
@@ -53,7 +53,7 @@ func MakePathIDDecoder(data CreateNewDatatype)  http2.DecodeRequestFunc {
 			return nil, ErrBadRoute
 		}
 
-		parsedID, err := strconv.ParseUint(idstring,10,32)
+		parsedID, err := strconv.ParseUint(idstring, 10, 32)
 
 		if err != nil {
 			return nil, ErrBadRoute
@@ -82,7 +82,7 @@ func MakePathIDDecoder(data CreateNewDatatype)  http2.DecodeRequestFunc {
 			return Request{r, body, id}, nil
 
 		} else {
-			return Request{r,nil, id}, nil
+			return Request{r, nil, id}, nil
 		}
 	}
 }
@@ -92,5 +92,5 @@ type CreateNewDatatype func() interface{}
 type Request struct {
 	*http.Request
 	Data interface{}
-	ID uint
+	ID   uint
 }

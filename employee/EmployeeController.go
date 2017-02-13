@@ -6,8 +6,8 @@ import (
 	"golang.org/x/net/context"
 	"net/http"
 
-	"github.com/darenegade/SimpleGoKitService/util"
 	"github.com/darenegade/SimpleGoKitService/database"
+	"github.com/darenegade/SimpleGoKitService/util"
 )
 
 var svc = EmployeeService{}
@@ -28,7 +28,6 @@ func MakeEmployeesEndpoint() (string, endpoint.Endpoint) {
 		}
 	}
 }
-
 
 func MakeEmployeeEndpoint() (string, endpoint.Endpoint) {
 

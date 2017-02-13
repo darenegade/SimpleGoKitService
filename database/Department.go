@@ -2,11 +2,11 @@ package database
 
 type Department struct {
 	BaseEntity
-	Name      string
+	Name string
 	// Has One Head of Dep.
-	Head      Employee `gorm:"ForeignKey:HeadID;AssociationForeignKey:HeadID"`
-	HeadID    uint `json:"-"`
+	Head   Employee `gorm:"ForeignKey:HeadID;AssociationForeignKey:HeadID"`
+	HeadID uint     `json:"-"`
 	// Has Many Employees
-	EmployeesID   uint `json:"-"`
-	Employees []Employee `gorm:"ForeignKey:DepartmentID;AssociationForeignKey:EmployeesID"`
+	EmployeesID uint       `json:"-"`
+	Employees   []Employee `gorm:"ForeignKey:DepartmentID;AssociationForeignKey:EmployeesID"`
 }

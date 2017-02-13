@@ -4,8 +4,6 @@ import (
 	"github.com/darenegade/SimpleGoKitService/database"
 )
 
-
-
 type EmployeeRepository interface {
 	findAll() ([]database.Employee, error)
 	findOne(uint) (database.Employee, error)
@@ -14,29 +12,29 @@ type EmployeeRepository interface {
 	delete(uint) error
 }
 
-type EmployeeService struct {}
+type EmployeeService struct{}
 
-func (EmployeeService) findAll() ([]database.Employee,error) {
+func (EmployeeService) findAll() ([]database.Employee, error) {
 	var employees []database.Employee
 	err := database.FindAll(&employees)
 
 	return employees, err
 }
 
-func (EmployeeService) findOne(ID uint) (database.Employee, error){
+func (EmployeeService) findOne(ID uint) (database.Employee, error) {
 	var employee database.Employee
 	err := database.FindOne(&employee, ID)
 
 	return employee, err
 }
 
-func (EmployeeService) create(employee database.Employee) (database.Employee, error){
+func (EmployeeService) create(employee database.Employee) (database.Employee, error) {
 	err := database.Create(&employee)
 
 	return employee, err
 }
 
-func (es EmployeeService) update(employee database.Employee, ID uint) (database.Employee, error){
+func (es EmployeeService) update(employee database.Employee, ID uint) (database.Employee, error) {
 
 	current, err := es.findOne(ID)
 
@@ -51,7 +49,7 @@ func (es EmployeeService) update(employee database.Employee, ID uint) (database.
 	return current, err
 }
 
-func (EmployeeService) delete(ID uint) error{
+func (EmployeeService) delete(ID uint) error {
 	var employee database.Employee
 	employee.ID = ID
 	err := database.Delete(&employee)

@@ -6,9 +6,9 @@ import (
 	"os"
 
 	stdjwt "github.com/dgrijalva/jwt-go"
-	httptransport "github.com/go-kit/kit/transport/http"
-	LOG "github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/auth/jwt"
+	LOG "github.com/go-kit/kit/log"
+	httptransport "github.com/go-kit/kit/transport/http"
 	"golang.org/x/net/context"
 
 	"github.com/gorilla/mux"
@@ -16,15 +16,15 @@ import (
 	"github.com/go-kit/kit/endpoint"
 
 	"github.com/darenegade/SimpleGoKitService/database"
+	"github.com/darenegade/SimpleGoKitService/employee"
 	"github.com/darenegade/SimpleGoKitService/hello"
 	"github.com/darenegade/SimpleGoKitService/middleware"
-	"github.com/darenegade/SimpleGoKitService/employee"
 )
 
 var (
 	logger = LOG.NewLogfmtLogger(os.Stdout)
-	ctx = context.Background()
-	kf = func(token *stdjwt.Token) (interface{}, error) { return []byte("TEST"), nil }
+	ctx    = context.Background()
+	kf     = func(token *stdjwt.Token) (interface{}, error) { return []byte("TEST"), nil }
 )
 
 func main() {
@@ -64,7 +64,7 @@ func handleHelloWorld(r *mux.Router) {
 
 }
 
-func handleEmployees(r *mux.Router){
+func handleEmployees(r *mux.Router) {
 
 	endpointPath, createdEndpoint := employee.MakeEmployeesEndpoint()
 	createdEndpoint = configEndpoint(createdEndpoint, endpointPath)
@@ -77,7 +77,6 @@ func handleEmployees(r *mux.Router){
 		httptransport.ServerBefore(jwt.ToHTTPContext()),
 		httptransport.ServerErrorLogger(logger),
 	)
-
 
 	r.Handle(endpointPath, handler).Methods(http.MethodGet, http.MethodPost)
 
@@ -96,7 +95,7 @@ func handleEmployees(r *mux.Router){
 	r.Handle(endpointPath, handler).Methods(http.MethodGet, http.MethodPut, http.MethodDelete)
 }
 
-func configEndpoint (endpoint endpoint.Endpoint, endpointName string) endpoint.Endpoint {
+func configEndpoint(endpoint endpoint.Endpoint, endpointName string) endpoint.Endpoint {
 	endpoint = jwt.NewParser(kf, stdjwt.SigningMethodHS256)(endpoint)
 	endpoint = middleware.Logging(LOG.NewContext(logger).With("method", endpointName))(endpoint)
 	return endpoint

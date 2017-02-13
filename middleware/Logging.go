@@ -3,16 +3,16 @@ package middleware
 import (
 	"time"
 
-	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/endpoint"
+	"github.com/go-kit/kit/log"
 	"golang.org/x/net/context"
 )
 
-func Logging (logger log.Logger) endpoint.Middleware {
+func Logging(logger log.Logger) endpoint.Middleware {
 	return func(next endpoint.Endpoint) endpoint.Endpoint {
 		return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 
-			data,err := next(ctx, request)
+			data, err := next(ctx, request)
 
 			if err != nil {
 				defer func(begin time.Time) {
@@ -24,7 +24,7 @@ func Logging (logger log.Logger) endpoint.Middleware {
 				}(time.Now())
 			}
 
-			return data,err
+			return data, err
 		}
 	}
 }
